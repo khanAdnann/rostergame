@@ -34,6 +34,7 @@ body {
   -webkit-font-smoothing: antialiased;
   user-select: none;
   touch-action: none;
+  overscroll-behavior: none;
 }
 
 button,
@@ -1119,6 +1120,11 @@ a {
   backdrop-filter: blur(10px);
   touch-action: none;
   cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .touch-turn {
@@ -1150,6 +1156,43 @@ a {
 @media (pointer: coarse), (max-width: 860px) {
   .touch-controls.is-live {
     display: flex;
+  }
+}
+
+/* Better mobile support */
+@media (max-width: 680px) and (orientation: landscape) {
+  .touch-controls {
+    bottom: max(10px, env(safe-area-inset-bottom));
+    padding: 0 max(10px, env(safe-area-inset-left)) 0 max(10px, env(safe-area-inset-right));
+  }
+  
+  .touch-turn {
+    width: 52px;
+    height: 52px;
+    font-size: 24px;
+  }
+  
+  .touch-thrust {
+    width: 80px;
+    height: 52px;
+  }
+  
+  .hud-left {
+    bottom: max(90px, calc(90px + env(safe-area-inset-bottom)));
+    left: max(10px, env(safe-area-inset-left));
+  }
+  
+  .hud-right {
+    bottom: max(90px, calc(90px + env(safe-area-inset-bottom)));
+    right: max(10px, env(safe-area-inset-right));
+  }
+  
+  .topbar {
+    padding: 10px max(10px, env(safe-area-inset-left)) 10px max(10px, env(safe-area-inset-right));
+  }
+  
+  .site-footer {
+    bottom: max(4px, env(safe-area-inset-bottom));
   }
 }
 
@@ -1442,7 +1485,7 @@ a {
 
 @media (max-width: 680px) {
   .topbar {
-    padding: 13px 14px;
+    padding: 13px max(14px, env(safe-area-inset-left)) 13px max(14px, env(safe-area-inset-right));
   }
 
   .brand-mark {
@@ -1477,7 +1520,7 @@ a {
   }
 
   .title-screen {
-    padding: 76px 17px 66px;
+    padding: 76px max(17px, env(safe-area-inset-left)) 66px max(17px, env(safe-area-inset-right));
   }
 
   .hero-copy h1 {
@@ -1518,8 +1561,8 @@ a {
   }
 
   .hud-left {
-    left: 15px;
-    bottom: 175px;
+    left: max(15px, env(safe-area-inset-left));
+    bottom: max(175px, calc(175px + env(safe-area-inset-bottom)));
     gap: 16px;
   }
 
@@ -1532,8 +1575,8 @@ a {
   }
 
   .hud-right {
-    right: 15px;
-    bottom: 175px;
+    right: max(15px, env(safe-area-inset-right));
+    bottom: max(175px, calc(175px + env(safe-area-inset-bottom)));
     width: 164px;
     gap: 9px;
   }
@@ -1559,6 +1602,7 @@ a {
     gap: 11px;
     font-size: 6.2px;
     line-height: 1.4;
+    padding-bottom: max(9px, env(safe-area-inset-bottom));
   }
 
   .site-footer .footer-mid {

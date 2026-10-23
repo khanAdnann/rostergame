@@ -533,11 +533,11 @@
   function initScene() {
     renderer = new THREE.WebGLRenderer({
       canvas: dom.canvas,
-      antialias: true,
+      antialias: window.devicePixelRatio < 2,
       alpha: false,
       powerPreference: 'high-performance'
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, window.innerWidth < 680 ? 1.5 : 2));
     renderer.setSize(window.innerWidth, window.innerHeight, false);
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -571,7 +571,7 @@
     if (!renderer || !camera) return;
     var width = window.innerWidth;
     var height = window.innerHeight;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, width < 680 ? 1.5 : 2));
     renderer.setSize(width, height, false);
     camera.aspect = width / Math.max(1, height);
     camera.updateProjectionMatrix();
