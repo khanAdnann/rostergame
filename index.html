@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#04060d">
+  <meta name="description" content="Roadster Loop is a night-time ramp stunt game. Wait for green, launch, spin, burn cold gas, and stick the landing.">
+  <title>Roadster Loop — Night Ramp Stunt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="scene-container" aria-hidden="true">
+      <canvas id="game-canvas"></canvas>
+    </div>
+
+    <div class="scene-wash" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <i></i><i></i><i></i>
+        </span>
+        <div class="brand-copy">
+          <span class="brand-name">ROADSTER <em>LOOP</em></span>
+          <span class="brand-sub">NIGHT RAMP PROGRAM</span>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="best-chip">
+          <span>PERSONAL BEST</span>
+          <strong id="best-score">000000</strong>
+        </div>
+        <button id="sound-toggle" class="icon-button" type="button" aria-label="Mute sound" aria-pressed="false">
+          <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="sound-label">SOUND ON</span>
+        </button>
+      </div>
+    </header>
+
+    <div id="start-lights" class="start-lights" aria-label="Start lights">
+      <div class="lights-track">
+        <span class="lamp" data-lamp="0"></span>
+        <span class="lamp" data-lamp="1"></span>
+        <span class="lamp" data-lamp="2"></span>
+        <span class="lamp" data-lamp="3"></span>
+      </div>
+      <div class="lights-status" id="lights-status">STANDBY</div>
+    </div>
+
+    <div id="run-hud" class="run-hud" aria-hidden="true">
+      <div class="hud-left">
+        <div class="readout readout-main">
+          <span class="readout-label">VELOCITY</span>
+          <strong><span id="hud-speed">0</span><small>MPH</small></strong>
+        </div>
+        <div class="readout">
+          <span class="readout-label">ALTITUDE</span>
+          <strong><span id="hud-altitude">0</span><small>FT</small></strong>
+        </div>
+      </div>
+
+      <div class="hud-right">
+        <div class="gas-panel">
+          <div class="gas-head">
+            <span>COLD GAS</span>
+            <b id="gas-value">100%</b>
+          </div>
+          <div class="gas-track"><i id="gas-fill"></i></div>
+        </div>
+        <div class="mini-stats">
+          <span>RINGS <b id="hud-rings">0</b></span>
+          <span>FLIPS <b id="hud-flips">0</b></span>
+          <span>TILT <b id="hud-tilt">0&deg;</b></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="announce" class="announce" role="status" aria-live="assertive"></div>
+
+    <div id="touch-controls" class="touch-controls" aria-hidden="true">
+      <button id="touch-left" class="touch-button touch-turn" type="button" aria-label="Rotate car counter-clockwise">
+        <span aria-hidden="true">&#8634;</span>
+      </button>
+      <button id="touch-thrust" class="touch-button touch-thrust" type="button" aria-label="Fire cold-gas thrusters">
+        <span>THRUST</span>
+      </button>
+      <button id="touch-right" class="touch-button touch-turn" type="button" aria-label="Rotate car clockwise">
+        <span aria-hidden="true">&#8635;</span>
+      </button>
+    </div>
+
+    <section id="title-screen" class="screen title-screen is-visible">
+      <div class="title-grid">
+        <div class="hero-copy">
+          <div class="eyebrow"><span></span> NIGHT RUN / 01</div>
+          <h1><span>ROADSTER</span><span class="outline">LOOP</span></h1>
+          <p class="hero-lede">A cold-gas ramp stunt at the edge of the city. Wait for green. Launch hard. Find the rings. Bring it down clean.</p>
+
+          <div class="hero-actions">
+            <button id="start-button" class="primary-button" type="button">
+              <span>INITIATE LAUNCH</span>
+              <small>PRESS SPACE / TAP</small>
+            </button>
+            <div class="hero-best">
+              <span>BEST SCORE</span>
+              <strong id="title-best">000000</strong>
+            </div>
+          </div>
+
+          <div class="spec-strip" aria-label="Vehicle specifications">
+            <span><b>AERON R1</b> CONCEPT</span>
+            <span>DUAL MOTOR</span>
+            <span>4&times; COLD-GAS PORT</span>
+            <span>NIGHT SPEC</span>
+          </div>
+        </div>
+
+        <aside class="briefing-card">
+          <div class="briefing-head">
+            <span>FLIGHT BRIEF</span>
+            <b>RL-01</b>
+          </div>
+          <ol class="briefing-list">
+            <li>
+              <span class="step-no">01</span>
+              <div><strong>STAGE ON GREEN</strong><p>Any tap before green locks input for 0.4 s. Reaction time sets ramp speed, 76&ndash;90 mph.</p></div>
+            </li>
+            <li>
+              <span class="step-no">02</span>
+              <div><strong>WORK THE AIR</strong><p>&larr; &rarr; rotate. Hold space to fire four floor thrusters. Thread light rings for score and gas.</p></div>
+            </li>
+            <li>
+              <span class="step-no">03</span>
+              <div><strong>STICK IT</strong><p>Touch down under 39 ft/s sink and inside 28&deg; of upright. Everything else is debris.</p></div>
+            </li>
+          </ol>
+          <div class="briefing-footer">
+            <span>RAMP R22 / WALL 14 / CURL R9</span>
+            <span class="live-dot">SYSTEM READY</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="results-screen" class="screen results-screen" hidden>
+      <div class="results-card">
+        <div class="results-head">
+          <div>
+            <span class="eyebrow"><span></span> RUN COMPLETE</span>
+            <h2 id="result-outcome">TOUCHDOWN CONFIRMED</h2>
+          </div>
+          <div id="new-best" class="new-best" hidden>NEW BEST</div>
+        </div>
+
+        <div class="score-lockup">
+          <div class="grade-block">
+            <span>GRADE</span>
+            <strong id="result-grade">A</strong>
+          </div>
+          <div class="score-block">
+            <span>FINAL SCORE</span>
+            <strong id="result-score">0</strong>
+            <small>RINGS &times;500 &middot; FLIPS &times;1500 &middot; ALT + AIR + SOFT LANDING</small>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat"><span>REACTION</span><strong id="result-reaction">0.000 s</strong></div>
+          <div class="stat"><span>RAMP SPEED</span><strong id="result-ramp-speed">0 mph</strong></div>
+          <div class="stat"><span>PEAK G</span><strong id="result-peak-g">0.0 G</strong></div>
+          <div class="stat"><span>MAX ALTITUDE</span><strong id="result-altitude">0 ft</strong></div>
+          <div class="stat"><span>AIRTIME</span><strong id="result-airtime">0.0 s</strong></div>
+          <div class="stat"><span>FLIPS</span><strong id="result-flips">0</strong></div>
+          <div class="stat"><span>RINGS</span><strong id="result-rings">0 / 6</strong></div>
+          <div class="stat"><span>TOUCHDOWN SPEED</span><strong id="result-touchdown">0.0 ft/s</strong></div>
+          <div class="stat stat-wide"><span>SOFT LANDING BONUS</span><strong id="result-soft">0 pts</strong></div>
+        </div>
+
+        <div class="results-actions">
+          <button id="retry-button" class="primary-button" type="button">
+            <span>RUN IT AGAIN</span>
+            <small>SPACE TO STAGE</small>
+          </button>
+          <button id="home-button" class="ghost-button" type="button">BACK TO GRID</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>Unofficial fan game, not affiliated with Tesla.</span>
+      <span class="footer-mid">AERON R1 // NIGHT LOOP</span>
+      <a href="privacy.html">Privacy</a>
+    </footer>
+
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-mark"><i></i><i></i><i></i></div>
+      <span>INITIALIZING NIGHT RUN</span>
+    </div>
+
+    <noscript>
+      <div class="noscript">Roadster Loop needs JavaScript and WebGL to run.</div>
+    </noscript>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
